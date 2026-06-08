@@ -84,19 +84,24 @@ void MiPluginDELAY::processBlock(juce::AudioBuffer<float>& buffer,
 
     delaySamples = (int)((delayMs / 1000.0) * currentSampleRate); //Delay en ms convertido a muestras
 
-    for (int n = 0; n < buffer.getNumSamples(); ++n) // para cada sample del bloque
-    { 
-    readIndex = (writeIndex - delaySamples + delayBuffSize) % delayBuffSize; //Posición de lectura. LEE EL PASADO
-    float delayed = delayBuffer[readIndex]; //Obtiene el valor del sample retrasado
-    float in = data[n]; //Valor del sample actual
+    for (int channel = 0; channel < buffer.getNumChannels(); ++channel) // para cada canal
+    {
+        auto* data = buffer.getWritePointer(channel); //Puntero al buffer del DAW para ese canal
+        
+        for (int n = 0; n < buffer.getNumSamples(); ++n) // para cada sample del bloque
+        { 
+            readIndex = (writeIndex - delaySamples + delayBuffSize) % delayBuffSize; //Posición de lectura. LEE EL PASADO
+            float delayed = delayBuffer[readIndex]; //Obtiene el valor del sample retrasado
+            float in = data[n]; //Valor del sample actual
 
-   //PARA DELAY CON FEEDBACK delayBuffer[writeIndex] = in + delayed; //Escribo en el buffer circular el sample actual + el retrasado
-    delayBuffer[writeIndex] = in; //Escribo en el buffer circular el sample actual. UNA SOLA REPETICIÓN porque no tiene feedback
+            //PARA DELAY CON FEEDBACK delayBuffer[writeIndex] = in + delayed; //Escribo en el buffer circular el sample actual + el retrasado
+            delayBuffer[writeIndex] = in; //Escribo en el buffer circular el sample actual. UNA SOLA REPETICIÓN porque no tiene feedback
 
-    data[n] = in + delayed; //Escribo en el buffer del DAW el sample actual + el retrasado (el resultado final)
+            data[n] = in + delayed; //Escribo en el buffer del DAW el sample actual + el retrasado (el resultado final)
 
-    writeIndex++; //Avanza el índice de escritura
-    writeIndex = (writeIndex == delayBuffer.size()) ? 0 : writeIndex; //Operador ternario (if implícito)
+            writeIndex++; //Avanza el índice de escritura
+            writeIndex = (writeIndex == delayBuffer.size()) ? 0 : writeIndex; //Operador ternario (if implícito)
+        }
     }
 }
 
