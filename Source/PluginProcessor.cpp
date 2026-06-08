@@ -19,10 +19,7 @@
 MiPluginDELAY::MiPluginDELAY()
     : AudioProcessor(BusesProperties()
         .withInput("Input", juce::AudioChannelSet::stereo(), true)
-        .withOutput("Output", juce::AudioChannelSet::stereo(), true)) {
-        
-            //double currentSampleRate = sampleRate;
-        }
+        .withOutput("Output", juce::AudioChannelSet::stereo(), true)) {}
 
 /* Fin del constructor. Todo lo que reservamos acá queda disponible para siempre. 
 Por eso lo hacemos acá y no en processBlock — si reservás memoria en processBlock, 
@@ -45,6 +42,9 @@ En este plugin no necesitamos hacer nada en ninguna de las dos.*/
 void MiPluginDELAY::prepareToPlay(double, int) {
 // el DAW avisa a qué sample rate va a correr
 
+readIndex = 0;
+writeIndex = 0;
+
 currentSampleRate = getSampleRate(); //Guardo el sample rate para usarlo después
 
 maxDelayTime = 5000.0f; //Delay máximo en segundos
@@ -52,9 +52,13 @@ delayBuffSize = currentSampleRate * (maxDelayTime / 1000.0); //Buffer de 5 segun
                                        //Permite delayMs MAX de 5000 ms. Aunque el buffer es circular, no podés leer más atrás de lo que tu memoria almacena.
 delayBuffer.assign(delayBuffSize, 0.0f);
 
-delayMs = 500.0f; //Delay en milisegundos
-writeIndex = 0;
-readIndex = 0;
+delayMs[0] = 1000.0f;
+delayMs[1] = 2500.0f;
+delayMs[2] = 3000.0f;
+
+for (int tap = 0; tap < tapNum; tap++){
+    delaySamples[tap] = static_cast<int>((delayMs[tap] / 1000.0) * currentSampleRate);
+}
 
 //ACÁ HAGO MIS TABLAS de retardo, de amplitud máxima, de coeficientes de decaimiento y de frecuencia de corte del filtro
 //En ese caso no puedo modificar la reverb mientras está corriendo el audio. Y si lo hago en PB?
@@ -80,29 +84,31 @@ void MiPluginDELAY::releaseResources() {}
 void MiPluginDELAY::processBlock(juce::AudioBuffer<float>& buffer,
                                    juce::MidiBuffer&)
 {
-    auto* data = buffer.getWritePointer(0); //Puntero al buffer del DAW
 
-    delaySamples = (int)((delayMs / 1000.0) * currentSampleRate); //Delay en ms convertido a muestras
-
-    for (int channel = 0; channel < buffer.getNumChannels(); ++channel) // para cada canal
-    {
-        auto* data = buffer.getWritePointer(channel); //Puntero al buffer del DAW para ese canal
+        auto* data = buffer.getWritePointer(0); //Puntero al buffer del DAW para ese canal
         
         for (int n = 0; n < buffer.getNumSamples(); ++n) // para cada sample del bloque
         { 
-            readIndex = (writeIndex - delaySamples + delayBuffSize) % delayBuffSize; //Posición de lectura. LEE EL PASADO
-            float delayed = delayBuffer[readIndex]; //Obtiene el valor del sample retrasado
             float in = data[n]; //Valor del sample actual
+            float sum = 0.0f; //Acumulador para el valor del sample retrasado (delay)
+        
+         // VARIOS PUNTOS DE LECTURA PARA HACER VARIAS REPETICIONES DEL DELAY
+            for (int tap = 0; tap < tapNum; tap++) 
+            {
+                int readIndex = (writeIndex - delaySamples[tap] + delayBuffSize) % delayBuffSize; //Posición de lectura. LEE EL PASADO
+                sum += delayBuffer[readIndex]; //Acumula el valor del sample retrasado para todas las repeticiones
+            }
 
-            //PARA DELAY CON FEEDBACK delayBuffer[writeIndex] = in + delayed; //Escribo en el buffer circular el sample actual + el retrasado
+         //PARA DELAY CON FEEDBACK delayBuffer[writeIndex] = in + delayed; //Escribo en el buffer circular el sample actual + el retrasado
             delayBuffer[writeIndex] = in; //Escribo en el buffer circular el sample actual. UNA SOLA REPETICIÓN porque no tiene feedback
 
-            data[n] = in + delayed; //Escribo en el buffer del DAW el sample actual + el retrasado (el resultado final)
+            data[n] = in + sum; //Escribo en el buffer del DAW el sample actual + el retrasado (el resultado final)
 
-            writeIndex++; //Avanza el índice de escritura
-            writeIndex = (writeIndex == delayBuffer.size()) ? 0 : writeIndex; //Operador ternario (if implícito)
+            // UN SÓLO PUNTO DE ESCRITURA
+            writeIndex++; //Avanza el índice de escritura 
+            // writeIndex %= delayBuffSize; 
+            writeIndex = (writeIndex == delayBuffSize) ? 0 : writeIndex;
         }
-    }
 }
 
 // ─── CREAR EDITOR ─────────────────────────────────────────────────────────────

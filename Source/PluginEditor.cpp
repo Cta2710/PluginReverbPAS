@@ -25,25 +25,25 @@ MiPluginDELAYEditor::MiPluginDELAYEditor(
     startTimerHz(30);     // redibujar 30 veces por segundo
 
     //Hace visibles los sliders de control
-    addAndMakeVisible(delayMsSlider);
+    // addAndMakeVisible(delayMsSlider);
  //   addAndMakeVisible(retardoSlider); 
     //addAndMakeVisible(numTapsSlider);
 
     //Setea rangos de trabajo 
-    delayMsSlider.setRange(0.0, audioProcessor.maxDelayTime, 0.01);
+    // delayMsSlider.setRange(0.0, audioProcessor.maxDelayTime, 0.01);
    // retardoSlider.setRange(0.0, 2000.0, 1.0);
   //  numTapsSlider.setRange(1, 10, 1);
 
   //Define qué pasa cuando se mueve cada slider — actualiza los valores en el Processor
-  delayMsSlider.onValueChange = [this]{
-    audioProcessor.delayMs = delayMsSlider.getValue();
+  // delayMsSlider.onValueChange = [this]{
+    // audioProcessor.delayMs = delayMsSlider.getValue();
 };
 
     //Declara valores iniciales
-    delayMsSlider.setValue(0.5f);
+    // delayMsSlider.setValue(0.5f);
   //  retardoSlider.setValue(100.0f);
   //  numTapsSlider.setValue(5.0f);
-}
+
 
 // ─── DESTRUCTOR ───────────────────────────────────────────────────────────────
 MiPluginDELAYEditor::~MiPluginDELAYEditor()
@@ -69,7 +69,7 @@ void MiPluginDELAYEditor::paint(juce::Graphics& g)
 
 void MiPluginDELAYEditor::resized() {
   //Dibuja los sliders de control
-    delayMsSlider.setBounds(20, 20, 200, 40);
+    // delayMsSlider.setBounds(20, 20, 200, 40);
   //  retardoSlider.setBounds(10, 120, 20, 50);
    // numTapsSlider.setBounds(margin_left, margin_top + 60, plot_width, 20);
 }

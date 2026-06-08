@@ -1,3 +1,10 @@
 build/
+build2/
+.vs/
 
+*.obj
+*.lib
+*.ilk
 *.pdb
+*.iobj
+*.ipdb

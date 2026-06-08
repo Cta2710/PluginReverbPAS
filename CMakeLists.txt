@@ -14,16 +14,16 @@
 # ============================================================
 
 cmake_minimum_required(VERSION 3.22)
-project(MiPluginDELAY VERSION 0.1)
+project(MiPluginDELAY02 VERSION 0.1)
 
 # Ajustá esta ruta a donde tengas JUCE clonado
 add_subdirectory(C:/dev/JUCE ./JUCE)
 
-juce_add_plugin(MiPluginDELAY
+juce_add_plugin(MiPluginDELAY02
     FORMATS VST3
-    PLUGIN_NAME "Delay"
+    PLUGIN_NAME "Delay2"
     PLUGIN_MANUFACTURER_CODE Cbas
-    PLUGIN_CODE DelP
+    PLUGIN_CODE DelB
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
@@ -33,19 +33,19 @@ juce_add_plugin(MiPluginDELAY
     VST3_CAN_REPLACE_VST2 FALSE
 )
 
-juce_generate_juce_header(MiPluginDELAY)
+juce_generate_juce_header(MiPluginDELAY02)
 
-target_sources(MiPluginDELAY PRIVATE
+target_sources(MiPluginDELAY02 PRIVATE
     Source/PluginProcessor.cpp
     Source/PluginEditor.cpp
 )
 
-target_link_libraries(MiPluginDELAY PRIVATE
+target_link_libraries(MiPluginDELAY02 PRIVATE
     juce::juce_audio_processors
     juce::juce_audio_utils
     juce::juce_dsp
 )
 
-target_compile_definitions(MiPluginDELAY PUBLIC
+target_compile_definitions(MiPluginDELAY02 PUBLIC
     JUCE_IGNORE_VST3_MISMATCHED_PARAMETER_ID_WARNING=1
 )

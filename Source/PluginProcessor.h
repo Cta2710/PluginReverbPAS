@@ -46,15 +46,19 @@ public:
     void getStateInformation(juce::MemoryBlock&) override {}
     void setStateInformation(const void*, int) override {}
 
-    std::vector<float> delayBuffer; //Buffer circular para el delay
-    float maxDelayTime; //QUIERO GRAFICAR............. y si...? (para más adelante) el tamaño del buffer circular se modifica según el tiempo de delay requerido?
-    int delayBuffSize;
-
-    int writeIndex;
-    int readIndex;
-    int delaySamples;
-    float delayMs; //QUIERO GRAFICAR
+    // ----------------------------Mis variables--------------------------------
     float currentSampleRate;
+    float maxDelayTime;
+    int delayBuffSize;
+    std::vector<float> delayBuffer; //Buffer circular para el delay
+
+    int writeIndex = 0;
+    int readIndex = 0;
+   
+    static constexpr int tapNum = 3; //Tiene que ser una constante para poder usarla en la declaración de los arrays
+    int delaySamples[tapNum];
+    float delayMs[tapNum]; 
+
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MiPluginDELAY)
