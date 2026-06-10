@@ -56,12 +56,18 @@ delayMs[0] = 1000.0f;
 delayMs[1] = 2500.0f;
 delayMs[2] = 3000.0f;
 
-for (int tap = 0; tap < tapNum; tap++){
-    delaySamples[tap] = static_cast<int>((delayMs[tap] / 1000.0) * currentSampleRate);
-}
 
 //ACÁ HAGO MIS TABLAS de retardo, de amplitud máxima, de coeficientes de decaimiento y de frecuencia de corte del filtro
 //En ese caso no puedo modificar la reverb mientras está corriendo el audio. Y si lo hago en PB?
+}
+
+void MiPluginDELAY::updateDelaySamples()
+{
+    for (int tap = 0; tap < tapNum; tap++)
+    {
+        delaySamples[tap] =
+            static_cast<int>((delayMs[tap] / 1000.0f) * currentSampleRate);
+    }
 }
 
 // ─── RELEASE RESOURCES ────────────────────────────────────────────────────────
