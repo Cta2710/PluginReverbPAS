@@ -34,9 +34,9 @@ MiPluginDELAYEditor::MiPluginDELAYEditor(
     delayMsSlider2.setRange(10.0, 5000, 0.01);
     delayMsSlider3.setRange(10.0, 5000, 0.01);
 
-     //Define qué pasa cuando se mueve cada slider — actualiza los valores en el Processor
+    //Define qué pasa cuando se mueve cada slider
     delayMsSlider1.onValueChange = [this]{
-    audioProcessor.delayMs[0] = delayMsSlider1.getValue();
+    audioProcessor.delayMs[0] = delayMsSlider1.getValue(); //Actualiza el valor de delayMs en el Processor
     audioProcessor.updateDelaySamples(); //Llama a la función para actualizar el valor en tiempo real
     };
 

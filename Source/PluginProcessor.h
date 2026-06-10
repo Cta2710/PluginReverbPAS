@@ -46,10 +46,10 @@ public:
     void getStateInformation(juce::MemoryBlock&) override {}
     void setStateInformation(const void*, int) override {}
 
-    // ----------------------------Mis funciones--------------------------------
+    // ----------------------------Mis funciones----------------------------
     void updateDelaySamples();
 
-    // ----------------------------Mis variables--------------------------------
+    // ----------------------------Mis variables----------------------------
     float currentSampleRate;
     float maxDelayTime;
     int delayBuffSize;

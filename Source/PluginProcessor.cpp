@@ -42,31 +42,31 @@ En este plugin no necesitamos hacer nada en ninguna de las dos.*/
 void MiPluginDELAY::prepareToPlay(double, int) {
 // el DAW avisa a qué sample rate va a correr
 
-readIndex = 0;
-writeIndex = 0;
+//-------Setup de variables en tiempo de compilación
 
-currentSampleRate = getSampleRate(); //Guardo el sample rate para usarlo después
+readIndex = 0; //Inicializo el índice de lectura del buffer circular en 0.
+writeIndex = 0; //Inicializo el índice de escritura del buffer circular en 0.
 
-maxDelayTime = 5000.0f; //Delay máximo en segundos
-delayBuffSize = currentSampleRate * (maxDelayTime / 1000.0); //Buffer de 5 segundos de duración (en muestras). 
-                                       //Permite delayMs MAX de 5000 ms. Aunque el buffer es circular, no podés leer más atrás de lo que tu memoria almacena.
-delayBuffer.assign(delayBuffSize, 0.0f);
+currentSampleRate = getSampleRate(); //Obtengo el sample rate del DAW.
 
-delayMs[0] = 1000.0f;
+maxDelayTime = 5000.0f; //Delay máximo en segundos - define el tamaño del buffer circular.
+delayBuffSize = currentSampleRate * (maxDelayTime / 1000.0); //Transformo el delay máximo de ms a samples para definir el tamaño del buffer circular.
+                                       //Permite delayMs MAX de 5000 ms. Aunque el buffer es circular, no se puede leer más atrás de lo que la memoria almacena.
+delayBuffer.assign(delayBuffSize, 0.0f); //Reservo memoria para el buffer circular, lo lleno de ceros.
+
+delayMs[0] = 1000.0f; //Inicializo los valores de delayMs para cada repetición del delay.
 delayMs[1] = 2500.0f;
 delayMs[2] = 3000.0f;
 
-
-//ACÁ HAGO MIS TABLAS de retardo, de amplitud máxima, de coeficientes de decaimiento y de frecuencia de corte del filtro
-//En ese caso no puedo modificar la reverb mientras está corriendo el audio. Y si lo hago en PB?
 }
 
+//-------Función para actualizar el valor de delaySamples cada vez que se cambia delayMs desde el Editor.
 void MiPluginDELAY::updateDelaySamples()
 {
-    for (int tap = 0; tap < tapNum; tap++)
+    for (int tap = 0; tap < tapNum; tap++) //Recorro cada repetición del delay
     {
         delaySamples[tap] =
-            static_cast<int>((delayMs[tap] / 1000.0f) * currentSampleRate);
+            static_cast<int>((delayMs[tap] / 1000.0f) * currentSampleRate); //Transformo el delay de ms a samples.
     }
 }
 
@@ -76,44 +76,29 @@ void MiPluginDELAY::releaseResources() {}
 
 
 // ─── PROCESS BLOCK — EL CORAZÓN DEL PLUGIN ───────────────────────────────────
-// El DAW llama a esta función ~86 veces por segundo.
-// Cada vez manda un bloque de ~512 samples de audio.
-//                                                        
-// ║  Los pasos son:                                          ║
-// ║  1. Leer samples del DAW                                 ║
-// ║  2. Acumular hasta tener buffer_size                     ║
-// ║  3. Copiar al buffer de JUCE                             ║
-// ║  4. Procesar                                             ║
-// ║  5. Resetear y empezar de nuevo                          ║
-// ╚══════════════════════════════════════════════════════════╝
-//
 void MiPluginDELAY::processBlock(juce::AudioBuffer<float>& buffer,
                                    juce::MidiBuffer&)
 {
-
-        auto* data = buffer.getWritePointer(0); //Puntero al buffer del DAW para ese canal
+        auto* data = buffer.getWritePointer(0); //Puntero al buffer del DAW para el primer canal (mono).
         
-        for (int n = 0; n < buffer.getNumSamples(); ++n) // para cada sample del bloque
+        for (int n = 0; n < buffer.getNumSamples(); ++n) //Recorro cada sample del bloque.
         { 
-            float in = data[n]; //Valor del sample actual
-            float sum = 0.0f; //Acumulador para el valor del sample retrasado (delay)
-        
-         // VARIOS PUNTOS DE LECTURA PARA HACER VARIAS REPETICIONES DEL DELAY
-            for (int tap = 0; tap < tapNum; tap++) 
+            float in = data[n]; //Inicializo el sample de entrada.
+            float sum = 0.0f; //Inicializo el acumulador.
+
+            for (int tap = 0; tap < tapNum; tap++) //Recorro cada repetición del delay.
             {
-                int readIndex = (writeIndex - delaySamples[tap] + delayBuffSize) % delayBuffSize; //Posición de lectura. LEE EL PASADO
+                int readIndex = (writeIndex - delaySamples[tap] + delayBuffSize) % delayBuffSize;   //Posición de lectura. LEE EL PASADO.
+                                                                                                    //Al sample actual le resto el delay en samples para leer el valor retrasado. Sumo delayBuffSize para evitar índices negativos, y uso módulo para que el buffer sea circular.   
                 sum += delayBuffer[readIndex]; //Acumula el valor del sample retrasado para todas las repeticiones
             }
 
-         //PARA DELAY CON FEEDBACK delayBuffer[writeIndex] = in + delayed; //Escribo en el buffer circular el sample actual + el retrasado
-            delayBuffer[writeIndex] = in; //Escribo en el buffer circular el sample actual. UNA SOLA REPETICIÓN porque no tiene feedback
+            delayBuffer[writeIndex] = in; //Escribo en el buffer circular el sample actual.
 
-            data[n] = in + sum; //Escribo en el buffer del DAW el sample actual + el retrasado (el resultado final)
+            data[n] = in + sum; //Escribo en el buffer del DAW el sample actual + los retrasados (OUTPUT).
 
-            // UN SÓLO PUNTO DE ESCRITURA
             writeIndex++; //Avanza el índice de escritura 
-            // writeIndex %= delayBuffSize; 
-            writeIndex = (writeIndex == delayBuffSize) ? 0 : writeIndex;
+            writeIndex = (writeIndex == delayBuffSize) ? 0 : writeIndex; //Si el índice de escritura llega al final del buffer, vuelve al principio (circular).
         }
 }
 
