@@ -23,9 +23,7 @@ public:
     void resized() override;                   // cuando cambia el tamaño
     void timerCallback() override;             // se llama 30 veces por segundo
 
-    juce ::Slider delayMsSlider1;
-    juce ::Slider delayMsSlider2;
-    juce ::Slider delayMsSlider3;
+    juce ::Slider delayMsSlider[3]; // Array de sliders
 
 private:
     MiPluginDELAY& audioProcessor;

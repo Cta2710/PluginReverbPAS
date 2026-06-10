@@ -24,36 +24,16 @@ MiPluginDELAYEditor::MiPluginDELAYEditor(
     setSize(1000, 400);   // ventana de 1000 x 400 píxeles
     startTimerHz(30);     // redibujar 30 veces por segundo
 
-    //Hace visibles los sliders de control
-    addAndMakeVisible(delayMsSlider1);
-    addAndMakeVisible(delayMsSlider2); 
-    addAndMakeVisible(delayMsSlider3);
-
-    //Setea rangos de trabajo 
-    delayMsSlider1.setRange(10.0, 5000, 0.01);
-    delayMsSlider2.setRange(10.0, 5000, 0.01);
-    delayMsSlider3.setRange(10.0, 5000, 0.01);
-
-    //Define qué pasa cuando se mueve cada slider
-    delayMsSlider1.onValueChange = [this]{
-    audioProcessor.delayMs[0] = delayMsSlider1.getValue(); //Actualiza el valor de delayMs en el Processor
-    audioProcessor.updateDelaySamples(); //Llama a la función para actualizar el valor en tiempo real
-    };
-
-    delayMsSlider2.onValueChange = [this]{
-    audioProcessor.delayMs[1] = delayMsSlider2.getValue();
-    audioProcessor.updateDelaySamples();
-    };
-
-    delayMsSlider3.onValueChange = [this]{
-    audioProcessor.delayMs[2] = delayMsSlider3.getValue();
-    audioProcessor.updateDelaySamples();
-    };
-
-    //Declara valores iniciales
-    delayMsSlider1.setValue(1000.0f);
-    delayMsSlider2.setValue(2000.0f);
-    delayMsSlider3.setValue(3000.0f);
+    for (int tap = 0; tap < audioProcessor.tapNum; ++tap)
+     {
+        addAndMakeVisible(delayMsSlider[tap]); //Hace visibles los sliders de control
+        delayMsSlider[tap].setRange(10.0, 5000, 0.01); //Setea rangos de trabajo de 10 ms a 5000 ms con pasos de 0.01 ms
+        delayMsSlider[tap].setValue(1000.0f * (tap + 1)); //Declara valores iniciales de mil en mil
+        delayMsSlider[tap].onValueChange = [this, tap]{
+            audioProcessor.delayMs[tap] = delayMsSlider[tap].getValue(); //Actualiza el valor de delayMs en el Processor
+            audioProcessor.updateDelaySamples(); //Llama a la función para actualizar el valor en tiempo real
+        };
+    }
 }
 
 // ─── DESTRUCTOR ───────────────────────────────────────────────────────────────
@@ -78,10 +58,4 @@ void MiPluginDELAYEditor::paint(juce::Graphics& g)
 
 }
 
-void MiPluginDELAYEditor::resized() 
-{
-    //Acomodar en pantalla los sliders
-    delayMsSlider1.setBounds(20, 20, 200, 40);
-    delayMsSlider2.setBounds(20, 80, 200, 40);
-    delayMsSlider3.setBounds(20, 140, 200, 40);
-}
+void MiPluginDELAYEditor::resized() {}
