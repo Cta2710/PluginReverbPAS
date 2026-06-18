@@ -7,6 +7,6 @@
 // No procesa, es sólo una estructura simple de datos. AGGREGATE
 struct Tap
 {
-         int delaySamples = 0;
-        float gain = 1.0f;
+        int delayMs = 0;
+        float gain = 0.0f;
 };

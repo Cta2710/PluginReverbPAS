@@ -24,16 +24,58 @@ MiPluginDELAYEditor::MiPluginDELAYEditor(
     setSize(1000, 400);   // ventana de 1000 x 400 píxeles
     startTimerHz(30);     // redibujar 30 veces por segundo
 
-    for (int tap = 0; tap < audioProcessor.tapNum; ++tap)
-     {
-        addAndMakeVisible(delayMsSlider[tap]); //Hace visibles los sliders de control
-        delayMsSlider[tap].setRange(10.0, 5000, 0.01); //Setea rangos de trabajo de 10 ms a 5000 ms con pasos de 0.01 ms
-        delayMsSlider[tap].setValue(1000.0f * (tap + 1)); //Declara valores iniciales de mil en mil
-        delayMsSlider[tap].onValueChange = [this, tap]{
-            audioProcessor.delayMs[tap] = delayMsSlider[tap].getValue(); //Actualiza el valor de delayMs en el Processor
-            audioProcessor.updateDelaySamples(); //Llama a la función para actualizar el valor en tiempo real
-        };
+    tapTable.setModel(this);
+    tapTable.getHeader().addColumn("Delay", 1, 80);
+    tapTable.getHeader().addColumn("Gain", 2, 80);
+    tapTable.getHeader().addColumn("Pan", 3, 80);
+    tapTable.getHeader().addColumn("Mute", 4, 60);
+
+    addAndMakeVisible(tapTable);
+}
+
+int MiPluginDELAYEditor::getNumRows()
+{
+    return audioProcessor.getNumTaps();
+}
+
+void MiPluginDELAYEditor::paintRowBackground(
+    juce::Graphics& g,
+    int,
+    int,
+    int,
+    bool rowIsSelected)
+{
+    g.fillAll(rowIsSelected ? juce::Colours::darkgrey
+                            : juce::Colours::black);
+}
+
+void MiPluginDELAYEditor::paintCell(
+    juce::Graphics& g,
+    int rowNumber,
+    int columnId,
+    int width,
+    int height,
+    bool)
+{
+    const auto& tap = audioProcessor.getTap(rowNumber);
+
+    juce::String text;
+
+    switch (columnId)
+    {
+        case 1: text = juce::String(tap.delayMs); break;
+        case 2: text = juce::String(tap.gain); break;
+        default: break;
     }
+
+    g.setColour(juce::Colours::white);
+
+    g.drawText(text,
+               2,
+               0,
+               width - 4,
+               height,
+               juce::Justification::centredLeft);
 }
 
 // ─── DESTRUCTOR ───────────────────────────────────────────────────────────────
@@ -58,4 +100,5 @@ void MiPluginDELAYEditor::paint(juce::Graphics& g)
 
 }
 
-void MiPluginDELAYEditor::resized() {}
+void MiPluginDELAYEditor::resized() 
+{   tapTable.setBounds(getLocalBounds().reduced(10)); }

@@ -13,7 +13,9 @@
 #include "PluginProcessor.h"
 
 class MiPluginDELAYEditor : public juce::AudioProcessorEditor,
-                                              public juce::Timer
+                            public juce::Timer,
+                            public juce::TableListBoxModel
+
 {
 public:
     MiPluginDELAYEditor(MiPluginDELAY&);
@@ -23,11 +25,27 @@ public:
     void resized() override;                   // cuando cambia el tamaño
     void timerCallback() override;             // se llama 30 veces por segundo
 
-    juce ::Slider delayMsSlider[3]; // Array de sliders
+   // TableListBoxModel
+    int getNumRows() override;
+
+    void paintRowBackground(juce::Graphics&,
+                            int rowNumber,
+                            int width,
+                            int height,
+                            bool rowIsSelected) override;
+
+    void paintCell(juce::Graphics&,
+                   int rowNumber,
+                   int columnId,
+                   int width,
+                   int height,
+                   bool rowIsSelected) override;
 
 private:
     MiPluginDELAY& audioProcessor;
     // referencia al Processor
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MiPluginDELAYEditor)
+
+    juce::TableListBox tapTable;
 };

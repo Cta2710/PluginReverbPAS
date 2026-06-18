@@ -15,9 +15,11 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>  // acá vive juce::dsp::FFT
+#include "Tap.h"
 #include <vector>
 
 class MiPluginDELAY : public juce::AudioProcessor
+
 {
 public:
     MiPluginDELAY();
@@ -46,23 +48,29 @@ public:
     void getStateInformation(juce::MemoryBlock&) override {}
     void setStateInformation(const void*, int) override {}
 
-    // ----------------------------Mis funciones----------------------------
-    void updateDelaySamples();
-
-    // ----------------------------Mis variables----------------------------
+    
+    // void updateDelaySamples();    
     float currentSampleRate;
     float maxDelayTime;
     int delayBuffSize;
     std::vector<float> delayBuffer; //Buffer circular para el delay
+    int delaySamples;
 
     int writeIndex = 0;
     int readIndex = 0;
    
-    static constexpr int tapNum = 3; //Tiene que ser una constante para poder usarla en la declaración de los arrays
-    int delaySamples[tapNum];
-    float delayMs[tapNum]; 
+// static constexpr int tapNum = 3; //Tiene que ser una constante para poder usarla en la declaración de los arrays
+    // int delaySamples[tapNum];
+    // float delayMs[tapNum]; 
+
+//Para la clase Tap
+    int getNumTaps() const;
+    const Tap& getTap(int index) const;
+    void setTapDelay(int index, float delayMs);
+    void setTapGain(int index, float gain);
 
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MiPluginDELAY)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MiPluginDELAY);
+    std::vector<Tap> taps;
 };
