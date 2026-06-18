@@ -2,17 +2,11 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 
-// Clase que configura una única línea de retardo
-class Tap
+// Configura una única línea de retardo 
+// Ficha con dos valores
+// No procesa, es sólo una estructura simple de datos. AGGREGATE
+struct Tap
 {
-    public:
-        void setTap(float newDelayMs, float sampleRate);
-        int getTap() const;
-
-    private: 
-        float delMs; 
-        int delSamp;
-        float sRate;
-        void updateDelaySamples();
-
+         int delaySamples = 0;
+        float gain = 1.0f;
 };

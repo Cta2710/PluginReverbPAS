@@ -10,6 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "Tap.h"
 
 // ─── CONSTRUCTOR ──────────────────────────────────────────────────────────────
 // Se ejecuta UNA sola vez cuando Reaper carga el plugin.
@@ -20,6 +21,8 @@ MiPluginDELAY::MiPluginDELAY()
     : AudioProcessor(BusesProperties()
         .withInput("Input", juce::AudioChannelSet::stereo(), true)
         .withOutput("Output", juce::AudioChannelSet::stereo(), true)) {}
+
+        std::vector<Tap> taps;
 
 /* Fin del constructor. Todo lo que reservamos acá queda disponible para siempre. 
 Por eso lo hacemos acá y no en processBlock — si reservás memoria en processBlock, 
@@ -44,6 +47,12 @@ void MiPluginDELAY::prepareToPlay(double, int) {
 
 //-------Setup de variables en tiempo de compilación
 
+//Agrego elementos al vector Taps
+//Lista de inicialización con push_back, miembros en orden de declaración de la clase
+taps.push_back({ 150, 0.8f });
+taps.push_back({ 430, 0.6f });
+taps.push_back({ 910, 0.3f });
+
 readIndex = 0; //Inicializo el índice de lectura del buffer circular en 0.
 writeIndex = 0; //Inicializo el índice de escritura del buffer circular en 0.
 
@@ -54,9 +63,9 @@ delayBuffSize = currentSampleRate * (maxDelayTime / 1000.0); //Transformo el del
                                        //Permite delayMs MAX de 5000 ms. Aunque el buffer es circular, no se puede leer más atrás de lo que la memoria almacena.
 delayBuffer.assign(delayBuffSize, 0.0f); //Reservo memoria para el buffer circular, lo lleno de ceros.
 
-delayMs[0] = 1000.0f; //Inicializo los valores de delayMs para cada repetición del delay.
-delayMs[1] = 2500.0f;
-delayMs[2] = 3000.0f;
+//delayMs[0] = 1000.0f; //Inicializo los valores de delayMs para cada repetición del delay.
+//delayMs[1] = 2500.0f;
+//delayMs[2] = 3000.0f;
 
 }
 
@@ -83,19 +92,21 @@ void MiPluginDELAY::processBlock(juce::AudioBuffer<float>& buffer,
         
         for (int n = 0; n < buffer.getNumSamples(); ++n) //Recorro cada sample del bloque.
         { 
-            float in = data[n]; //Inicializo el sample de entrada.
+            float in = data[n]; //Leo el sample de entrada
             float sum = 0.0f; //Inicializo el acumulador.
 
-            for (int tap = 0; tap < tapNum; tap++) //Recorro cada repetición del delay.
+            for (const auto& tap : taps) //Recorro vector de taps
             {
-                int readIndex = (writeIndex - delaySamples[tap] + delayBuffSize) % delayBuffSize;   //Posición de lectura. LEE EL PASADO.
+                int readIndex = (writeIndex - tap.delaySamples + delayBuffSize) % delayBuffSize;   //Calculo donde leer
                                                                                                     //Al sample actual le resto el delay en samples para leer el valor retrasado. Sumo delayBuffSize para evitar índices negativos, y uso módulo para que el buffer sea circular.   
-                sum += delayBuffer[readIndex]; //Acumula el valor del sample retrasado para todas las repeticiones
-            }
+                sum += tap.gain * delayBuffer[readIndex]; //Acumula el valor del sample retrasado ponderado por la ganancia
 
+            }
+            
             delayBuffer[writeIndex] = in; //Escribo en el buffer circular el sample actual.
 
-            data[n] = in + sum; //Escribo en el buffer del DAW el sample actual + los retrasados (OUTPUT).
+            data[n] = in + sum; //Genero la salida
+                                // Escribo en el buffer del DAW el sample actual + los retrasados (OUTPUT).
 
             writeIndex++; //Avanza el índice de escritura 
             writeIndex = (writeIndex == delayBuffSize) ? 0 : writeIndex; //Si el índice de escritura llega al final del buffer, vuelve al principio (circular).
