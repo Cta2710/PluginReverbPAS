@@ -1,12 +1,4 @@
 // ============================================================
-// PluginProcessor.cpp — MiTemplatePlugin
-// Programación Aplicada al Sonido II — UNA
-// ============================================================
-// IMPLEMENTACIÓN del Processor.
-//
-// Todo el DSP vive en processBlock().
-// El resto es setup y boilerplate.
-// ============================================================
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
@@ -33,14 +25,16 @@ MiPluginDELAY::MiPluginDELAY()
 int MiPluginDELAY::getNumTaps() const
 {   return static_cast<int>(taps.size()); }                 //Retorna el tamaño del vector de taps
 
+Tap& MiPluginDELAY::getTap(int index)
+{
+    return taps[index];
+}
+
 const Tap& MiPluginDELAY::getTap(int index) const
 {   return taps[index]; }                                   //Retorna el índice 
 
-void MiPluginDELAY::setTapDelay(int index, float delayMs)    //Modifica el retardo de cada tap según GUI
-{   taps[index].delayMs = delayMs; }
-
-void MiPluginDELAY::setTapGain(int index, float gain)        //Modifica el nivel de cada tap según GUI
-{    taps[index].gain = gain; }
+void MiPluginDELAY::setTap(int index, const Tap& tap)    //Modifica el retardo de cada tap según GUI
+{   taps[index] = tap; }
 
 // ─── DESTRUCTOR ───────────────────────────────────────────────────────────────
 // Destructor vacío. Los vectores se liberan solos cuando el plugin se cierra.

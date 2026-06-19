@@ -1,12 +1,4 @@
 // ============================================================
-// PluginEditor.h — MiTemplatePlugin
-// Programación Aplicada al Sonido II — UNA
-// ============================================================
-// El Editor es la CARA del plugin — lo que ves en Reaper.
-// Hereda de Timer para redibujar 30 veces por segundo.
-// Tiene una referencia al Processor para leer spectrum[].
-// El audio NUNCA pasa por acá — solo datos para mostrar.
-// ============================================================
 
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
@@ -41,6 +33,11 @@ public:
                    int height,
                    bool rowIsSelected) override;
 
+    juce::Component* refreshComponentForCell(int rowNumber,
+                                         int columnId,
+                                         bool isRowSelected,
+                                         juce::Component* existingComponentToUpdate) override;
+
 private:
     MiPluginDELAY& audioProcessor;
     // referencia al Processor
@@ -48,4 +45,6 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MiPluginDELAYEditor)
 
     juce::TableListBox tapTable;
+
+
 };

@@ -1,15 +1,4 @@
 // ============================================================
-// PluginProcessor.h — MiTemplatePlugin
-// Programación Aplicada al Sonido II — UNA
-// ============================================================
-// El Processor es el CEREBRO del plugin.
-// Recibe audio del DAW, lo procesa, y guarda los resultados.
-// El Editor lee esos resultados para dibujar en pantalla.
-//
-// Este archivo es la DECLARACIÓN: dice qué funciones y
-// variables existen, pero no cómo funcionan.
-// La implementación está en PluginProcessor.cpp.
-// ============================================================
 
 #pragma once  // que este archivo se incluya una sola vez
 
@@ -65,10 +54,9 @@ public:
 
 //Para la clase Tap
     int getNumTaps() const;
+    Tap& getTap(int index);
     const Tap& getTap(int index) const;
-    void setTapDelay(int index, float delayMs);
-    void setTapGain(int index, float gain);
-
+    void setTap(int index, const Tap& tap);
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MiPluginDELAY);

@@ -1,20 +1,14 @@
 // ============================================================
-// PluginEditor.cpp — MiTemplatePlugin
-// Programación Aplicada al Sonido II — UNA
-// ============================================================
-// La CARA del plugin — dibuja el espectro en pantalla.
-//
-// Cómo funciona:
-//   1. startTimerHz(30) → arranca un reloj que suena 30 veces por segundo
-//   2. Cada vez que suena → timerCallback() → repaint()
-//   3. repaint() dispara paint() → dibuja todo de nuevo
-//
-// paint() lee spectrum[] del Processor y dibuja una barra
-// de color por cada bin de frecuencia.
-// ============================================================
 
 #include "PluginEditor.h"
 #include <cmath>
+
+class EditableLabel : public juce::Label
+{
+public:
+    int row = 0;
+    int column = 0;
+};
 
 // ─── CONSTRUCTOR ──────────────────────────────────────────────────────────────
 MiPluginDELAYEditor::MiPluginDELAYEditor(
@@ -27,8 +21,6 @@ MiPluginDELAYEditor::MiPluginDELAYEditor(
     tapTable.setModel(this);
     tapTable.getHeader().addColumn("Delay", 1, 80);
     tapTable.getHeader().addColumn("Gain", 2, 80);
-    tapTable.getHeader().addColumn("Pan", 3, 80);
-    tapTable.getHeader().addColumn("Mute", 4, 60);
 
     addAndMakeVisible(tapTable);
 }
@@ -76,6 +68,61 @@ void MiPluginDELAYEditor::paintCell(
                width - 4,
                height,
                juce::Justification::centredLeft);
+}
+
+juce::Component* MiPluginDELAYEditor::refreshComponentForCell(
+    int rowNumber,
+    int columnId,
+    bool,
+    juce::Component* existingComponentToUpdate)
+{
+    auto* label = dynamic_cast<EditableLabel*>(existingComponentToUpdate);
+
+    if (label == nullptr)
+    {
+        label = new EditableLabel();
+
+        label->setEditable(true);
+        label->setJustificationType(juce::Justification::centredLeft);
+
+        label->onTextChange = [this, label]
+        {
+            auto tap = audioProcessor.getTap(label->row);
+
+            switch (label->column)
+            {
+                case 1: // Delay
+                    tap.delayMs = label->getText().getIntValue();
+                    break;
+
+                case 2: // Gain
+                    tap.gain = label->getText().getFloatValue();
+                    break;
+            }
+
+            audioProcessor.setTap(label->row, tap);
+        };
+    }
+
+    label->row = rowNumber;
+    label->column = columnId;
+
+    const auto& tap = audioProcessor.getTap(rowNumber);
+
+    switch (columnId)
+    {
+        case 1: // Delay
+            label->setText(juce::String(tap.delayMs),
+                           juce::dontSendNotification);
+            break;
+
+        case 2: // Gain
+            label->setText(juce::String(tap.gain),
+                           juce::dontSendNotification);
+            break;
+    }
+
+    return label;
 }
 
 // ─── DESTRUCTOR ───────────────────────────────────────────────────────────────
