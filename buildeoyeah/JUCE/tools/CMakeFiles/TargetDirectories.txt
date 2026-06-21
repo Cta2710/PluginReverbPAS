@@ -1,0 +1,7 @@
+C:/dev/MisCodigos/SingleMonoDelay/buildeoyeah/JUCE/tools/CMakeFiles/INSTALL.dir
+C:/dev/MisCodigos/SingleMonoDelay/buildeoyeah/JUCE/tools/CMakeFiles/ALL_BUILD.dir
+C:/dev/MisCodigos/SingleMonoDelay/buildeoyeah/JUCE/tools/CMakeFiles/ZERO_CHECK.dir
+C:/dev/MisCodigos/SingleMonoDelay/buildeoyeah/JUCE/tools/modules/CMakeFiles/INSTALL.dir
+C:/dev/MisCodigos/SingleMonoDelay/buildeoyeah/JUCE/tools/extras/Build/CMakeFiles/INSTALL.dir
+C:/dev/MisCodigos/SingleMonoDelay/buildeoyeah/JUCE/tools/extras/Build/juceaide/CMakeFiles/juceaide.dir
+C:/dev/MisCodigos/SingleMonoDelay/buildeoyeah/JUCE/tools/extras/Build/juceaide/CMakeFiles/INSTALL.dir

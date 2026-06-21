@@ -1,0 +1,20 @@
+^C:\DEV\MISCODIGOS\SINGLEMONODELAY\BUILDEOYEAH\CMAKEFILES\E2797A2057EB5E8E3382C6F9EEDED2F6\JUCEHEADER.H.RULE
+setlocal
+JUCE\tools\extras\Build\juceaide\juceaide_artefacts\Custom\juceaide.exe header C:/dev/MisCodigos/SingleMonoDelay/buildeoyeah/MiPluginDELAY_artefacts/JuceLibraryCode/Debug/Defs.txt C:/dev/MisCodigos/SingleMonoDelay/buildeoyeah/MiPluginDELAY_artefacts/JuceLibraryCode/JuceHeader.h
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\DEV\MISCODIGOS\SINGLEMONODELAY\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/dev/MisCodigos/SingleMonoDelay -BC:/dev/MisCodigos/SingleMonoDelay/buildeoyeah --check-stamp-file C:/dev/MisCodigos/SingleMonoDelay/buildeoyeah/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

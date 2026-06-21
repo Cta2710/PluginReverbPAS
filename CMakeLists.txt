@@ -1,18 +1,3 @@
-# ============================================================
-# CMakeLists.txt — MiTemplatePlugin
-# Programación Aplicada al Sonido II — UNA
-# ============================================================
-#
-# Este archivo le dice al compilador qué construir.
-# No necesitan entenderlo en detalle — solo cambiar el nombre
-# del plugin y la ruta de JUCE si es diferente.
-#
-# Compilar:
-#   cd ~/Desktop/dev/UNA-PAS2/modulo-02-dft-fft/MiTemplatePlugin
-#   rm -rf build && mkdir build && cd build && cmake .. && make
-#
-# ============================================================
-
 cmake_minimum_required(VERSION 3.22)
 project(MiPluginDELAY VERSION 0.1)
 
@@ -21,7 +6,7 @@ add_subdirectory(C:/dev/JUCE ./JUCE)
 
 juce_add_plugin(MiPluginDELAY
     FORMATS VST3
-    PLUGIN_NAME "Delay3"
+    PLUGIN_NAME "EarlyRef"
     PLUGIN_MANUFACTURER_CODE Cbas
     PLUGIN_CODE DelB
     IS_SYNTH FALSE
@@ -36,8 +21,9 @@ juce_add_plugin(MiPluginDELAY
 juce_generate_juce_header(MiPluginDELAY)
 
 target_sources(MiPluginDELAY PRIVATE
-    Source/PluginProcessor.cpp
-    Source/PluginEditor.cpp
+    Source/Infr/PluginProcessor.cpp
+    Source/Infr/PluginEditor.cpp
+    Source/DSP/MultiTapDelay/MultiTapDelay.cpp
 )
 
 target_link_libraries(MiPluginDELAY PRIVATE

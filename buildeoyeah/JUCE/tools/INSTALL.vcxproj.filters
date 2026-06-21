@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\MisCodigos\SingleMonoDelay\buildeoyeah\JUCE\tools\CMakeFiles\46eb592b0edacfbc0fb6cf7042bc510a\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{2B685E54-B859-36C2-B4DC-19EA5BDDA568}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

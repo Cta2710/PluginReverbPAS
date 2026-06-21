@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\MisCodigos\SingleMonoDelay\buildeoyeah\CMakeFiles\e2797a2057eb5e8e3382c6f9eeded2f6\MiPluginDELAY_resources.rc.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\dev\MisCodigos\SingleMonoDelay\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C:\dev\MisCodigos\SingleMonoDelay\buildeoyeah\MiPluginDELAY_artefacts\JuceLibraryCode\MiPluginDELAY_resources.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{A6C6CFF0-377E-3BE6-94A1-7B2E00927B17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{8B59935F-DB7A-399D-9DAB-F415EC03337F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

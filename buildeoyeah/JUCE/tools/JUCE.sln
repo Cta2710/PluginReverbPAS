@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CMakePredefinedTargets", "CMakePredefinedTargets", "{112B75BF-8EF9-3D66-9374-71CD3F056D67}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ALL_BUILD", "ALL_BUILD.vcxproj", "{022213D1-6152-3874-853A-FB3B3028FC23}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FC5588F4-04FD-3A7D-B0DD-39E6D598635E} = {FC5588F4-04FD-3A7D-B0DD-39E6D598635E}
+		{34EE87CA-C414-322E-A2C7-5C3EDDDC68AD} = {34EE87CA-C414-322E-A2C7-5C3EDDDC68AD}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "INSTALL", "INSTALL.vcxproj", "{E89E23E9-4718-3C8B-80B0-9777C3DCCF3F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{022213D1-6152-3874-853A-FB3B3028FC23} = {022213D1-6152-3874-853A-FB3B3028FC23}
+		{FC5588F4-04FD-3A7D-B0DD-39E6D598635E} = {FC5588F4-04FD-3A7D-B0DD-39E6D598635E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZERO_CHECK", "ZERO_CHECK.vcxproj", "{FC5588F4-04FD-3A7D-B0DD-39E6D598635E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "juceaide", "extras\Build\juceaide\juceaide.vcxproj", "{34EE87CA-C414-322E-A2C7-5C3EDDDC68AD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FC5588F4-04FD-3A7D-B0DD-39E6D598635E} = {FC5588F4-04FD-3A7D-B0DD-39E6D598635E}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Custom|x64 = Custom|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{022213D1-6152-3874-853A-FB3B3028FC23}.Custom|x64.ActiveCfg = Custom|x64
+		{022213D1-6152-3874-853A-FB3B3028FC23}.Custom|x64.Build.0 = Custom|x64
+		{E89E23E9-4718-3C8B-80B0-9777C3DCCF3F}.Custom|x64.ActiveCfg = Custom|x64
+		{FC5588F4-04FD-3A7D-B0DD-39E6D598635E}.Custom|x64.ActiveCfg = Custom|x64
+		{FC5588F4-04FD-3A7D-B0DD-39E6D598635E}.Custom|x64.Build.0 = Custom|x64
+		{34EE87CA-C414-322E-A2C7-5C3EDDDC68AD}.Custom|x64.ActiveCfg = Custom|x64
+		{34EE87CA-C414-322E-A2C7-5C3EDDDC68AD}.Custom|x64.Build.0 = Custom|x64
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{022213D1-6152-3874-853A-FB3B3028FC23} = {112B75BF-8EF9-3D66-9374-71CD3F056D67}
+		{E89E23E9-4718-3C8B-80B0-9777C3DCCF3F} = {112B75BF-8EF9-3D66-9374-71CD3F056D67}
+		{FC5588F4-04FD-3A7D-B0DD-39E6D598635E} = {112B75BF-8EF9-3D66-9374-71CD3F056D67}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7684E21-C4B0-3C1D-85EC-06AC0321940C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
