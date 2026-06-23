@@ -4,6 +4,8 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "../DSP/MultiTapDelay/MultiTapDelay.h"
 
+//La función de esta clase es crear una tabla de ms y gain que modifique al MultiTapDelay
+
 class TableEditor : public juce::Component,
                             public juce::TableListBoxModel
 

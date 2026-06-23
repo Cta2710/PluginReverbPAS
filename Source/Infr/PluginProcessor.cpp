@@ -3,6 +3,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+//La función de esta clase es comunicarse con el DAW
+
 // ─── CONSTRUCTOR ──────────────────────────────────────────────────────────────
 // Se ejecuta UNA sola vez cuando Reaper carga el plugin.
 // Acá reservamos memoria para todos los buffers.

@@ -5,6 +5,8 @@
 #include "PluginProcessor.h"
 #include "../GUI/TableEditor.h"
 
+//La función de esta clase es construir la interfaz y sus componentes
+
 class MiPluginDELAYEditor : public juce::AudioProcessorEditor
 
 {

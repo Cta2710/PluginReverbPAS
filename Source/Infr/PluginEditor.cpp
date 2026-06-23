@@ -3,8 +3,6 @@
 #include "PluginEditor.h"
 #include <cmath>
 
-//La función de esta clase es construir la interfaz y sus componentes
-
 // ─── CONSTRUCTOR ──────────────────────────────────────────────────────────────
 MiPluginDELAYEditor::MiPluginDELAYEditor(
     MiPluginDELAY& p)
