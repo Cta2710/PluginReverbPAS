@@ -12,9 +12,6 @@ class TableEditor : public juce::Component,
 {
 public:
     TableEditor(MultiTapDelay& d);
-
-   // void paint(juce::Graphics&) override;
-    void resized() override;
     
    // TableListBoxModel
     int getNumRows() override;
@@ -47,8 +44,6 @@ public:
 private:
 
     juce::TableListBox tapTable; //Declaración de una instancia del objeto tapTable de la clase de JUCE TableListBox 
-
-    juce::Slider sliderNumTaps; //Para configurar la cantidad de reflexiones
     
     MultiTapDelay& delay; //Referencia del delay
 

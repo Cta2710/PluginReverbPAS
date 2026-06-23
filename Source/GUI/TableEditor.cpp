@@ -3,32 +3,13 @@
 
 // ─── CONSTRUCTOR ──────────────────────────────────────────────────────────────
 TableEditor::TableEditor(MultiTapDelay& d) //Tiene una referencia del MultiTap, que se la pasa PluginEditor al cual se la pasa PluginProcessor
-    : delay(d)
+    : delay(d) //Lista de inicialización
 {
     tapTable.setModel(this);
     tapTable.getHeader().addColumn("Delay", 1, 80);
     tapTable.getHeader().addColumn("Gain", 2, 80);
 
     addAndMakeVisible(tapTable);
-    addAndMakeVisible(sliderNumTaps);
-
-    sliderNumTaps.setRange(1,50,1);
-    sliderNumTaps.setSliderStyle(juce::Slider::IncDecButtons);
-
-    sliderNumTaps.setTextBoxStyle(
-    juce::Slider::TextBoxLeft,
-    false,
-    50,
-    20);
-    
-    sliderNumTaps.setValue(4);
-    
-    sliderNumTaps.onValueChange = [this]
-    {
-        delay.setNumTaps(sliderNumTaps.getValue());
-        tapTable.updateContent();
-        repaint();
-    };
 }
 
 int TableEditor::getNumRows()
@@ -130,14 +111,5 @@ juce::Component* TableEditor::refreshComponentForCell(
     }
 
     return label;
-}
-
-void TableEditor::resized()
-{
-    auto area = getLocalBounds();
-
-    sliderNumTaps.setBounds(area.removeFromBottom(50));
-
-    tapTable.setBounds(area);
 }
 
