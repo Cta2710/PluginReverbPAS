@@ -3,52 +3,23 @@
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
+#include "../GUI/TableEditor.h"
 
-class MiPluginDELAYEditor : public juce::AudioProcessorEditor,
-                            public juce::Timer,
-                            public juce::TableListBoxModel
+class MiPluginDELAYEditor : public juce::AudioProcessorEditor
 
 {
 public:
-    MiPluginDELAYEditor(MiPluginDELAY&);
-    ~MiPluginDELAYEditor() override;
+    MiPluginDELAYEditor(MiPluginDELAY&); //Tiene en el constructor una referencia de la clase de PluginProcessor
 
     void paint(juce::Graphics&) override;     // dibuja todo
     void resized() override;                   // cuando cambia el tamaño
-    void timerCallback() override;             // se llama 30 veces por segundo
-
-   // TableListBoxModel
-    int getNumRows() override;
-
-    void paintRowBackground(juce::Graphics&,
-                            int rowNumber,
-                            int width,
-                            int height,
-                            bool rowIsSelected) override;
-
-    void paintCell(juce::Graphics&,
-                   int rowNumber,
-                   int columnId,
-                   int width,
-                   int height,
-                   bool rowIsSelected) override;
-
-    juce::Component* refreshComponentForCell(int rowNumber,
-                                         int columnId,
-                                         bool isRowSelected,
-                                         juce::Component* existingComponentToUpdate) override;
-
-    juce::TextButton addTapButton { "+" };
 
 private:
-    MiPluginDELAY& audioProcessor;
-    // referencia al Processor
 
-     MultiTapDelay& delay;
+    //REFERENCIAS
+    MiPluginDELAY& audioProcessor;      // Referencia directa al PluginProcessor
+    //MultiTapDelay& delay;               //Referencia al efecto que se la pasa PluginProcessor
+    TableEditor table;                 //Objeto miembro: PluginEditor es dueño del TableEditor
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MiPluginDELAYEditor)
-
-    juce::TableListBox tapTable;
-
-
 };

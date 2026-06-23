@@ -17,7 +17,7 @@ MiPluginDELAY::MiPluginDELAY()
 // Destructor vacío. Los vectores se liberan solos cuando el plugin se cierra.
 MiPluginDELAY::~MiPluginDELAY() {}
 
-//Función para poder referenciar al objeto miembro
+//GETTER: Función para poder referenciar al objeto miembro
 MultiTapDelay& MiPluginDELAY::getDelay()
 {
     return delay;

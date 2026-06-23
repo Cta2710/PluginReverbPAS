@@ -24,6 +24,7 @@ target_sources(MiPluginDELAY PRIVATE
     Source/Infr/PluginProcessor.cpp
     Source/Infr/PluginEditor.cpp
     Source/DSP/MultiTapDelay/MultiTapDelay.cpp
+    Source/GUI/TableEditor.cpp
 )
 
 target_link_libraries(MiPluginDELAY PRIVATE
