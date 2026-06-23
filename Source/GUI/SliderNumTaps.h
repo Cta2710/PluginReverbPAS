@@ -9,6 +9,8 @@ class SliderNumTaps : public juce::Component
 {
 public:
     SliderNumTaps(MultiTapDelay& d);
+    void resized() override;
+
 
 private:
 

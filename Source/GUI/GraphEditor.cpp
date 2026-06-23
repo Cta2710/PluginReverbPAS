@@ -69,16 +69,17 @@ void GraphEditor::paint(juce::Graphics& g)
     }
 }
 
-juce::Point<float> GraphEditor::getPointPosition(int tap) const  //Calcula posición en la pantalla de cada tap
+juce::Point<float> GraphEditor::getPointPosition(int tap) const 
 {
     auto area = getLocalBounds().toFloat().reduced(graphMargin);
 
-    float spacing = area.getWidth() / (delay.getNumTaps() - 1);
+    // Evitar división por cero si solo hay 1 tap
+    float spacing = 0.0f;
+    if (delay.getNumTaps() > 1)
+        spacing = area.getWidth() / (delay.getNumTaps() - 1);
 
     float x = area.getX() + tap * spacing;
-
     float value = getValueForTap(tap);
-
     float y = valueToY(value); 
 
     return { x, y };
@@ -90,7 +91,7 @@ float GraphEditor::valueToY(float value) const //
 
     return juce::jmap(value,
                       0.0f,
-                      1.0f,
+                      maxValue,
                       area.getBottom(),
                       area.getY());
 }
@@ -98,36 +99,45 @@ float GraphEditor::valueToY(float value) const //
 float GraphEditor::yToValue(float y) const
 {
     auto area = getLocalBounds().toFloat().reduced(graphMargin);
+    float maxValue = (parameter == Parameter::Delay) ? 5000.0f : 1.0f; // <-- Rango dinámico
 
     return juce::jlimit(
         0.0f,
-        1.0f,
+        maxValue,
         juce::jmap(y,
                    area.getBottom(),
                    area.getY(),
                    0.0f,
-                   1.0f));
+                   maxValue));
 }
 
-void GraphEditor::mouseDrag(const juce::MouseEvent& event)
+void GraphEditor::mouseDown(const juce::MouseEvent& event)
 {
-    if (selectedPoint < 0)
-        return;
+    selectedPoint = -1; // Reseteamos por las dudas
 
-    float value = yToValue(event.position.y);
-
-    setValueForTap(selectedPoint, value);
-
-    int selectedPoint = -1;
-
+    // Buscamos si el click fue cerca de algún punto
     for (int i = 0; i < delay.getNumTaps(); ++i)
     {
         auto p = getPointPosition(i);
-
-        if (event.position.getDistanceFrom(p) < 8.0f)
+        if (event.position.getDistanceFrom(p) < 12.0f) // 12px es un buen margen de error para el click
         {
             selectedPoint = i;
             break;
         }
     }
+}
+
+void GraphEditor::mouseDrag(const juce::MouseEvent& event)
+{
+    // Si agarramos un punto en mouseDown, le actualizamos el valor al arrastrar
+    if (selectedPoint >= 0)
+    {
+        float newValue = yToValue(event.position.y);
+        setValueForTap(selectedPoint, newValue);
+    }
+}
+
+void GraphEditor::mouseUp(const juce::MouseEvent& event)
+{
+    selectedPoint = -1; // Soltamos el punto
 }

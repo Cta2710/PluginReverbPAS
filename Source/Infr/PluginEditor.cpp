@@ -8,7 +8,7 @@ MiPluginDELAYEditor::MiPluginDELAYEditor(
     MiPluginDELAY& p)
     : AudioProcessorEditor(&p)
                             , audioProcessor(p)
-                            , table(p.getDelay())
+                            , tapTable(p.getDelay())
                             //p es una referencia al PluginProcessor. 
                             //p.getDelay() devuelve MultiTapDelay& y se pasa al constructor
                             // table(...) inicializa el miembro con la referencia.
@@ -17,7 +17,7 @@ MiPluginDELAYEditor::MiPluginDELAYEditor(
                             ,sliderNumTaps(p.getDelay())
 
 {
-    addAndMakeVisible(table);
+    addAndMakeVisible(tapTable);
     addAndMakeVisible(delayGraph);
     addAndMakeVisible(gainGraph);
     addAndMakeVisible(sliderNumTaps);
@@ -38,10 +38,22 @@ void MiPluginDELAYEditor::paint(juce::Graphics& g)
 void MiPluginDELAYEditor::resized() 
 {   
     auto area = getLocalBounds(); //Area total, depende del tamaño de ventana
-    sliderNumTaps.setBounds(area.removeFromTop(area.getHeight()/10)); //Dibuja el slider arriba de todo y le saca ese pedazo al área
-    table.setBounds(area.removeFromLeft(area.getWidth()/2)); 
+    area.removeFromTop(50);
+    sliderNumTaps.setBounds(area.removeFromTop(50));
 
-    auto graphArea = area;
-    delayGraph.setBounds(graphArea.removeFromTop(graphArea.getHeight() / 2));
-    gainGraph.setBounds(graphArea);
+    tapTable.setBounds(area.removeFromLeft(200));
+    delayGraph.setBounds(area);
+     
+
+    // auto graphArea = area;
+    // delayGraph.setBounds(graphArea.removeFromTop(graphArea.getHeight() / 2));
+    // gainGraph.setBounds(graphArea);
+
+//    auto area = getLocalBounds();
+
+    
+
+
+
+
 }

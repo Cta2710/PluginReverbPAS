@@ -24,4 +24,8 @@ SliderNumTaps::SliderNumTaps(MultiTapDelay& d) //Tiene una referencia del MultiT
         repaint();
     };
 }
-
+void SliderNumTaps::resized()
+{
+    auto area = getLocalBounds();
+    sliderNumTaps.setBounds(area.removeFromTop(50));
+}

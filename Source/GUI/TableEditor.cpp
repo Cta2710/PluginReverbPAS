@@ -72,6 +72,9 @@ juce::Component* TableEditor::refreshComponentForCell(
         label->setEditable(true);
         label->setJustificationType(juce::Justification::centredLeft);
 
+        label->setColour(juce::Label::textColourId, juce::Colours::white);
+    label->setColour(juce::Label::textWhenEditingColourId, juce::Colours::white);
+
         label->onTextChange = [this, label]
         {
             auto tap = delay.getTap(label->row);
@@ -113,3 +116,9 @@ juce::Component* TableEditor::refreshComponentForCell(
     return label;
 }
 
+void TableEditor::resized()
+{
+    auto area = getLocalBounds();
+
+    tapTable.setBounds(area);
+}

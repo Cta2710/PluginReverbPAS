@@ -11,6 +11,8 @@ class GraphEditor : public juce::Component
 {
 public:
 
+    float maxValue = 0.0f;
+
     enum class Parameter //Creo variables del tipo Parameter
     {
         Delay, //Guardamos los nombres
@@ -19,13 +21,13 @@ public:
 
     GraphEditor(MultiTapDelay& d, Parameter parameter);
 
-    void paint (juce::Graphics&) override;
+    void paint (juce::Graphics& g) override;
 
-    // void mouseDown (const juce::MouseEvent&) override;
+    void mouseDown (const juce::MouseEvent&) override;
 
     void mouseDrag (const juce::MouseEvent&) override;
 
-    // void mouseUp (const juce::MouseEvent&) override;
+    void mouseUp (const juce::MouseEvent&) override;
 
 private:
     

@@ -15,6 +15,8 @@ public:
     
    // TableListBoxModel
     int getNumRows() override;
+    // void paint(juce::Graphics&) override;
+    void resized() override;
 
     void paintRowBackground(juce::Graphics&,
                             int rowNumber,

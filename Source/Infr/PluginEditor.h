@@ -23,7 +23,7 @@ private:
     //REFERENCIAS
     MiPluginDELAY& audioProcessor;     // Referencia directa al PluginProcessor
    
-    TableEditor table;                 //Objeto miembro: PluginEditor es dueño de un TableEditor
+    TableEditor tapTable;                 //Objeto miembro: PluginEditor es dueño de un TableEditor
 
     GraphEditor delayGraph;            //Objetos miembro: PluginEditor es dueño de los GraphEditor
 
