@@ -11,9 +11,23 @@ MultiTapDelay::MultiTapDelay()
 }
 
 // ─── SETEO DE TAPS ───────────────────────────────────────────────────────────────
+/*Quedaron obsoletas por el setNumTaps que directamente redimensiona el vector
 void MultiTapDelay::addTap()
 {
     taps.push_back({ 0000, 0.0f });
+}
+
+void MultiTapDelay:: addMultipleTaps(int numTapsAdd)
+{
+    for (int c = 0; c < numTapsAdd; c++)
+    {
+        addTap();
+    }
+}  
+*/
+void MultiTapDelay::setNumTaps(int numTapsSet)
+{
+    taps.resize(numTapsSet);
 }
 
 int MultiTapDelay::getNumTaps() const

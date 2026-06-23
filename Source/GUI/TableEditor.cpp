@@ -10,14 +10,25 @@ TableEditor::TableEditor(MultiTapDelay& d) //Tiene una referencia del MultiTap, 
     tapTable.getHeader().addColumn("Gain", 2, 80);
 
     addAndMakeVisible(tapTable);
-    addAndMakeVisible(addTapButton);
-    
-    addTapButton.onClick = [this]
-    {
-        delay.addTap();
-        tapTable.updateContent();
-    };
+    addAndMakeVisible(sliderNumTaps);
 
+    sliderNumTaps.setRange(1,50,1);
+    sliderNumTaps.setSliderStyle(juce::Slider::IncDecButtons);
+
+    sliderNumTaps.setTextBoxStyle(
+    juce::Slider::TextBoxLeft,
+    false,
+    50,
+    20);
+    
+    sliderNumTaps.setValue(4);
+    
+    sliderNumTaps.onValueChange = [this]
+    {
+        delay.setNumTaps(sliderNumTaps.getValue());
+        tapTable.updateContent();
+        repaint();
+    };
 }
 
 int TableEditor::getNumRows()
@@ -125,7 +136,7 @@ void TableEditor::resized()
 {
     auto area = getLocalBounds();
 
-    addTapButton.setBounds(area.removeFromBottom(30));
+    sliderNumTaps.setBounds(area.removeFromBottom(50));
 
     tapTable.setBounds(area);
 }

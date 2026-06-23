@@ -48,8 +48,8 @@ private:
 
     juce::TableListBox tapTable; //Declaración de una instancia del objeto tapTable de la clase de JUCE TableListBox 
 
-    juce::TextButton addTapButton { "+" }; //Declaración de una instancia del objeto addTapbUTTON de la clase de JUCE TextButton
-
+    juce::Slider sliderNumTaps; //Para configurar la cantidad de reflexiones
+    
     MultiTapDelay& delay; //Referencia del delay
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TableEditor)

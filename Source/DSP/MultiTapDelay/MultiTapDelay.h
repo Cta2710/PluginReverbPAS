@@ -21,10 +21,12 @@ public:
 
      // Gestión de taps
     void setTap(int index, const Tap& tap);
-    void addTap();
-    // void removeTap(int index);
-//--------------------Variables
+    // void addTap();
+    // void addMultipleTaps(int numTapsAdd);
+    void setNumTaps(int numTapsSet);
+    
     // Para configurar los taps
+    
     int getNumTaps() const;
     Tap& getTap(int index);
     const Tap& getTap(int index) const;
