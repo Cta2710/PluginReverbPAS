@@ -14,14 +14,12 @@ MiPluginDELAYEditor::MiPluginDELAYEditor(
                             // table(...) inicializa el miembro con la referencia.
                             ,delayGraph(p.getDelay(), GraphEditor::Parameter::Delay)
                             ,gainGraph(p.getDelay(), GraphEditor::Parameter::Gain)
-                            ,sliderNumTaps(p.getDelay())
 
 {
     addAndMakeVisible(tapTable);
     addAndMakeVisible(delayGraph);
     addAndMakeVisible(gainGraph);
-    addAndMakeVisible(sliderNumTaps);
-    setSize(400,500);
+    setSize(800,500);
 }
 
 
@@ -38,11 +36,13 @@ void MiPluginDELAYEditor::paint(juce::Graphics& g)
 void MiPluginDELAYEditor::resized() 
 {   
     auto area = getLocalBounds(); //Area total, depende del tamaño de ventana
-    area.removeFromTop(50);
-    sliderNumTaps.setBounds(area.removeFromTop(50));
+    area.removeFromTop(40);
 
     tapTable.setBounds(area.removeFromLeft(200));
-    delayGraph.setBounds(area);
+    
+    auto altoDeCadaGrafico = area.getHeight() / 2;
+    delayGraph.setBounds(area.removeFromTop(altoDeCadaGrafico));
+    gainGraph.setBounds(area);
      
 
     // auto graphArea = area;

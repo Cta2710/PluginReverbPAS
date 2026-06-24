@@ -5,7 +5,6 @@
 #include "PluginProcessor.h"
 #include "../GUI/TableEditor.h"
 #include "../GUI/GraphEditor.h"
-#include "../GUI/SliderNumTaps.h"
 
 //La función de esta clase es construir la interfaz y sus componentes
 
@@ -28,8 +27,6 @@ private:
     GraphEditor delayGraph;            //Objetos miembro: PluginEditor es dueño de los GraphEditor
 
     GraphEditor gainGraph;
-
-    SliderNumTaps sliderNumTaps;       //Objeto miembro: PluginEditor es dueño de un SliderNumTaps
 
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MiPluginDELAYEditor)

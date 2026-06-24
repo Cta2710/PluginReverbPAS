@@ -28,7 +28,7 @@ void GraphEditor::setValueForTap(int tap, float value) //
     switch (parameter)
     {
         case Parameter::Delay:
-            delay.getTap(tap).delayMs = value; //modifico desde la referencia
+            delay.getTap(tap).delayMs = static_cast<int>(value); //modifico desde la referencia
             break;
 
         case Parameter::Gain:
@@ -41,8 +41,6 @@ void GraphEditor::setValueForTap(int tap, float value) //
 
 void GraphEditor::paint(juce::Graphics& g)
 {
-    auto bounds = getLocalBounds().toFloat();
-
     g.fillAll(juce::Colours::black);
 
     g.setColour(juce::Colours::white);
@@ -51,10 +49,10 @@ void GraphEditor::paint(juce::Graphics& g)
     {
         auto p = getPointPosition(i);  
 
-        g.fillEllipse(p.x - 4.0f,  //dibuja los círculos
-                      p.y - 4.0f,
-                      8.0f,
-                      8.0f);
+        g.fillEllipse(p.x - 5.0f,  //dibuja los círculos
+                      p.y - 5.0f,
+                      10.0f,
+                      10.0f);
 
         if (i > 0)
         {
@@ -76,9 +74,9 @@ juce::Point<float> GraphEditor::getPointPosition(int tap) const
     // Evitar división por cero si solo hay 1 tap
     float spacing = 0.0f;
     if (delay.getNumTaps() > 1)
-        spacing = area.getWidth() / (delay.getNumTaps() - 1);
+        spacing = area.getWidth() / static_cast<float>(delay.getNumTaps() - 1);
 
-    float x = area.getX() + tap * spacing;
+    float x = area.getX() + static_cast<float>(tap) * spacing;
     float value = getValueForTap(tap);
     float y = valueToY(value); 
 
@@ -88,6 +86,8 @@ juce::Point<float> GraphEditor::getPointPosition(int tap) const
 float GraphEditor::valueToY(float value) const //
 {
     auto area = getLocalBounds().toFloat().reduced(graphMargin);
+
+    float maxValue = (parameter == Parameter::Delay) ? 5000.0f : 1.0f;
 
     return juce::jmap(value,
                       0.0f,
@@ -140,4 +140,8 @@ void GraphEditor::mouseDrag(const juce::MouseEvent& event)
 void GraphEditor::mouseUp(const juce::MouseEvent& event)
 {
     selectedPoint = -1; // Soltamos el punto
+}
+
+void GraphEditor::resized()
+{
 }

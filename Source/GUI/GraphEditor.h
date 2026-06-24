@@ -13,6 +13,8 @@ public:
 
     float maxValue = 0.0f;
 
+    void resized() override;
+
     enum class Parameter //Creo variables del tipo Parameter
     {
         Delay, //Guardamos los nombres
@@ -32,11 +34,9 @@ public:
 private:
     
     MultiTapDelay& delay; //Referencia del delay
-
     Parameter parameter;
 
     int selectedPoint = -1;
-
     float graphMargin = 20.0f;
 
     // Conversión entre modelo y gráfico
@@ -45,7 +45,6 @@ private:
 
     // Conversión de coordenadas
     juce::Point<float> getPointPosition(int tap) const;
-
     float valueToY(float value) const;
     float yToValue(float y) const;
 
