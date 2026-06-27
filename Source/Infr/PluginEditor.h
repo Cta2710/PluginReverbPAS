@@ -8,7 +8,8 @@
 
 //La función de esta clase es construir la interfaz y sus componentes
 
-class MiPluginDELAYEditor : public juce::AudioProcessorEditor
+class MiPluginDELAYEditor : public juce::AudioProcessorEditor,
+                            public juce::Timer
 
 {
 public:
@@ -16,6 +17,7 @@ public:
 
     void paint(juce::Graphics&) override;     // dibuja todo
     void resized() override;                   // cuando cambia el tamaño
+    void timerCallback() override;
 
 private:
 

@@ -20,8 +20,15 @@ MiPluginDELAYEditor::MiPluginDELAYEditor(
     addAndMakeVisible(delayGraph);
     addAndMakeVisible(gainGraph);
     setSize(800,500);
+    startTimerHz(30);
 }
 
+void MiPluginDELAYEditor::timerCallback() 
+{
+    tapTable.refreshTable();
+    delayGraph.repaint();
+    gainGraph.repaint();
+}
 
 // ─── PAINT — DIBUJA TODO ──────────────────────────────────────────────────────
 void MiPluginDELAYEditor::paint(juce::Graphics& g)

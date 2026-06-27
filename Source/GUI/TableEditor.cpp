@@ -132,6 +132,12 @@ juce::Component* TableEditor::refreshComponentForCell(
     return label;
 }
 
+void TableEditor::refreshTable()
+{
+    tapTable.updateContent();
+    tapTable.repaint();
+}
+
 void TableEditor::resized()
 {
     auto area = getLocalBounds();

@@ -37,6 +37,8 @@ public:
                                          bool isRowSelected,
                                          juce::Component* existingComponentToUpdate) override;
 
+    void refreshTable();
+
     class EditableLabel : public juce::Label
 {
     public:
