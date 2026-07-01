@@ -56,7 +56,7 @@ void MiPluginDELAYEditor::paint(juce::Graphics& g)
   //Dibuja texto y fondo
     g.fillAll(juce::Colours::black);
     g.setColour(juce::Colours::white);
-    g.drawText("Delay Plugin", getLocalBounds(), juce::Justification::centredTop);
+    g.drawText("MULTITAP DELAY PLUGIN", getLocalBounds(), juce::Justification::topLeft);
 
 }
 
