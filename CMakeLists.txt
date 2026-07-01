@@ -24,11 +24,9 @@ target_sources(MiPluginDELAY PRIVATE
     Source/Infr/PluginProcessor.cpp
     Source/Infr/PluginEditor.cpp
     Source/DSP/MultiTapDelay/MultiTapDelay.cpp
+    Source/DSP/FiltroPasaBajos.cpp
     Source/GUI/TableEditor.cpp
-    Source/GUI/GraphEditor.cpp
-    Source/GUI/SliderNumTaps.cpp
-
-)
+    Source/GUI/GraphEditor.cpp)
 
 target_link_libraries(MiPluginDELAY PRIVATE
     juce::juce_audio_processors

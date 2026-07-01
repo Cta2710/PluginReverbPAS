@@ -14,20 +14,40 @@ MiPluginDELAYEditor::MiPluginDELAYEditor(
                             // table(...) inicializa el miembro con la referencia.
                             ,delayGraph(p.getDelay(), GraphEditor::Parameter::Delay)
                             ,gainGraph(p.getDelay(), GraphEditor::Parameter::Gain)
+                            ,filterGraph(p.getDelay(), GraphEditor::Parameter::CutOffFreq)
 
 {
     addAndMakeVisible(tapTable);
     addAndMakeVisible(delayGraph);
     addAndMakeVisible(gainGraph);
+    addAndMakeVisible(filterGraph);
     setSize(800,500);
+    
+    delayGraph.onDataChanged = [this]
+    {
+    tapTable.refreshTable();
+    };
+
+    gainGraph.onDataChanged = [this]
+    {
+    tapTable.refreshTable();
+    };
+
+    filterGraph.onDataChanged = [this]
+    {
+    tapTable.refreshTable();
+    };
+
     startTimerHz(30);
+
 }
+
 
 void MiPluginDELAYEditor::timerCallback() 
 {
-    tapTable.refreshTable();
     delayGraph.repaint();
     gainGraph.repaint();
+    filterGraph.repaint();
 }
 
 // ─── PAINT — DIBUJA TODO ──────────────────────────────────────────────────────
@@ -45,22 +65,10 @@ void MiPluginDELAYEditor::resized()
     auto area = getLocalBounds(); //Area total, depende del tamaño de ventana
     area.removeFromTop(40);
 
-    tapTable.setBounds(area.removeFromLeft(200));
+    tapTable.setBounds(area.removeFromLeft(240));
     
-    auto altoDeCadaGrafico = area.getHeight() / 2;
+    auto altoDeCadaGrafico = area.getHeight() / 3;
     delayGraph.setBounds(area.removeFromTop(altoDeCadaGrafico));
-    gainGraph.setBounds(area);
-     
-
-    // auto graphArea = area;
-    // delayGraph.setBounds(graphArea.removeFromTop(graphArea.getHeight() / 2));
-    // gainGraph.setBounds(graphArea);
-
-//    auto area = getLocalBounds();
-
-    
-
-
-
-
+    gainGraph.setBounds(area.removeFromTop(altoDeCadaGrafico));
+    filterGraph.setBounds(area);
 }

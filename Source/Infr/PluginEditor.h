@@ -6,7 +6,7 @@
 #include "../GUI/TableEditor.h"
 #include "../GUI/GraphEditor.h"
 
-//La función de esta clase es construir la interfaz y sus componentes
+//La función de esta clase es construir la interfaz gráfic y sus componentes
 
 class MiPluginDELAYEditor : public juce::AudioProcessorEditor,
                             public juce::Timer
@@ -20,7 +20,6 @@ public:
     void timerCallback() override;
 
 private:
-
     //REFERENCIAS
     MiPluginDELAY& audioProcessor;     // Referencia directa al PluginProcessor
    
@@ -29,6 +28,8 @@ private:
     GraphEditor delayGraph;            //Objetos miembro: PluginEditor es dueño de los GraphEditor
 
     GraphEditor gainGraph;
+
+    GraphEditor filterGraph;
 
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MiPluginDELAYEditor)

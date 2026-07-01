@@ -8,6 +8,7 @@ TableEditor::TableEditor(MultiTapDelay& d) //Tiene una referencia del MultiTap, 
     tapTable.setModel(this);
     tapTable.getHeader().addColumn("Delay", 1, 80);
     tapTable.getHeader().addColumn("Gain", 2, 80);
+    tapTable.getHeader().addColumn("Cutoff Freq", 3, 80);
 
     addAndMakeVisible(tapTable);
     addAndMakeVisible(sliderNumTaps);
@@ -47,6 +48,7 @@ void TableEditor::paintRowBackground(
                             : juce::Colours::black);
 }
 
+//Función para graficar los valores de los taps
 void TableEditor::paintCell(
     juce::Graphics& g,
     int rowNumber,
@@ -63,6 +65,7 @@ void TableEditor::paintCell(
     {
         case 1: text = juce::String(tap.delayMs); break;
         case 2: text = juce::String(tap.gain); break;
+        case 3: text = juce::String(tap.cutOffFreq); break;
         default: break;
     }
 
@@ -76,6 +79,7 @@ void TableEditor::paintCell(
                juce::Justification::centredLeft);
 }
 
+// Función para modificar los valores de los taps
 juce::Component* TableEditor::refreshComponentForCell(
     int rowNumber,
     int columnId,
@@ -93,7 +97,7 @@ juce::Component* TableEditor::refreshComponentForCell(
 
         label->onTextChange = [this, label]
         {
-            auto tap = delay.getTap(label->row);
+            auto& tap = delay.getTap(label->row);
 
             switch (label->column)
             {
@@ -102,12 +106,14 @@ juce::Component* TableEditor::refreshComponentForCell(
                     break;
 
                 case 2: // Gain
-                    tap.gain = label->getText().getFloatValue();
+                    tap.gain = label->getText().getFloatValue(); 
                     break;
+                case 3: //Cutoff Freq
+                    tap.cutOffFreq = label->getText().getFloatValue(); //Acá lo paso como valor directamente
+                    tap.lowpass.setCutFreq(label->getText().getFloatValue()); //Acá lo paso como argumento de la función
             }
 
             delay.setTap(label->row, tap);
-            repaint();
         };
     }
 
@@ -127,6 +133,11 @@ juce::Component* TableEditor::refreshComponentForCell(
             label->setText(juce::String(tap.gain),
                            juce::dontSendNotification);
             break;
+
+        case 3: //Cutoff Freq
+             label->setText(juce::String(tap.cutOffFreq),
+                           juce::dontSendNotification);
+            break;
     }
 
     return label;
@@ -135,7 +146,6 @@ juce::Component* TableEditor::refreshComponentForCell(
 void TableEditor::refreshTable()
 {
     tapTable.updateContent();
-    tapTable.repaint();
 }
 
 void TableEditor::resized()

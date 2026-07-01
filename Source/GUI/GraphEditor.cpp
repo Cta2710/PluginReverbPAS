@@ -18,6 +18,9 @@ float GraphEditor::getValueForTap(int tap) const //Recibe el índice del tap y d
 
         case Parameter::Gain:
             return delay.getTap(tap).gain; //Devuelve el miembro ganancia
+
+        case Parameter::CutOffFreq:
+            return delay.getTap(tap).cutOffFreq; //Devuelve el miembro frecuencia de corte
     }
 
     return 0.0f; //Sino, devuelve cero
@@ -34,6 +37,11 @@ void GraphEditor::setValueForTap(int tap, float value) //
         case Parameter::Gain:
             delay.getTap(tap).gain = value;
             break;
+
+         case Parameter::CutOffFreq:
+            delay.getTap(tap).cutOffFreq = value;
+            delay.getTap(tap).lowpass.setCutFreq(value);
+            break;
     }
 
     repaint();
@@ -44,6 +52,28 @@ void GraphEditor::paint(juce::Graphics& g)
     g.fillAll(juce::Colours::black);
 
     g.setColour(juce::Colours::white);
+
+    switch (parameter)
+    {
+        case Parameter::Delay:
+           g.drawText("Delay Time (ms: max 5000)",
+           getLocalBounds().removeFromTop(20),
+           juce::Justification::centred);            
+           break;
+
+        case Parameter::Gain:
+           g.drawText("Gain (max 1)",
+           getLocalBounds().removeFromTop(20),
+           juce::Justification::centred);            
+           break;
+
+         case Parameter::CutOffFreq:
+           g.drawText("Cut-off Frequency (LINEAR SCALE)",
+           getLocalBounds().removeFromTop(20),
+           juce::Justification::centred);            
+           break;
+    }
+
 
     for (int i = 0; i < delay.getNumTaps(); ++i)
     {
@@ -64,6 +94,8 @@ void GraphEditor::paint(juce::Graphics& g)
                        p.y,
                        2.0f);
         }
+
+        repaint();
     }
 }
 
@@ -87,7 +119,21 @@ float GraphEditor::valueToY(float value) const //
 {
     auto area = getLocalBounds().toFloat().reduced(graphMargin);
 
-    float maxValue = (parameter == Parameter::Delay) ? 5000.0f : 1.0f;
+    float maxValue = 1.0f;
+    switch (parameter) //Define valor máximo para cada parámetro
+    {
+        case Parameter::Delay:
+            maxValue = 5000.0f;
+            break;
+
+        case Parameter::Gain:
+            maxValue = 1.0f;
+            break;
+
+        case Parameter::CutOffFreq:
+            maxValue = 20000.0f;
+            break;
+    }
 
     return juce::jmap(value,
                       0.0f,
@@ -99,7 +145,22 @@ float GraphEditor::valueToY(float value) const //
 float GraphEditor::yToValue(float y) const
 {
     auto area = getLocalBounds().toFloat().reduced(graphMargin);
-    float maxValue = (parameter == Parameter::Delay) ? 5000.0f : 1.0f; // <-- Rango dinámico
+    
+    float maxValue;
+    switch (parameter) //Define valor máximo para cada parámetro
+    {
+        case Parameter::Delay:
+            maxValue = 5000.0f;
+            break;
+
+        case Parameter::Gain:
+            maxValue = 1.0f;
+            break;
+
+        case Parameter::CutOffFreq:
+            maxValue = 20000.0f;
+            break;
+    }
 
     return juce::jlimit(
         0.0f,
@@ -135,6 +196,8 @@ void GraphEditor::mouseDrag(const juce::MouseEvent& event)
         float newValue = yToValue(event.position.y);
         setValueForTap(selectedPoint, newValue);
     }
+    if (onDataChanged)
+    onDataChanged();
 }
 
 void GraphEditor::mouseUp(const juce::MouseEvent& event)
@@ -142,6 +205,4 @@ void GraphEditor::mouseUp(const juce::MouseEvent& event)
     selectedPoint = -1; // Soltamos el punto
 }
 
-void GraphEditor::resized()
-{
-}
+void GraphEditor::resized() {}

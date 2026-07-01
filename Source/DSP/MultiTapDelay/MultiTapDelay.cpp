@@ -27,7 +27,18 @@ void MultiTapDelay:: addMultipleTaps(int numTapsAdd)
 */
 void MultiTapDelay::setNumTaps(int numTapsSet)
 {
-    taps.resize(numTapsSet);
+   int oldSize = taps.size();
+
+    taps.resize(numTapsSet); 
+
+    for (int i = oldSize; i < numTapsSet; ++i) //Inicializa y prepara los taps nuevos
+    {
+        auto& tap = taps[i];
+
+        tap.cutOffFreq = 2000.0f;
+        tap.lowpass.prepare(currentSampleRate);
+        tap.lowpass.setCutFreq(tap.cutOffFreq);
+    }
 }
 
 int MultiTapDelay::getNumTaps() const
@@ -62,6 +73,12 @@ void MultiTapDelay::prepare(double sampleRate, float maxDelayMs)
     
     writeIndex = 0; //Inicializo el índice de escritura del buffer circular en 0.
 
+    //Preparo el filtro para cada Tap, les doy info del sample rate
+    for (auto& tap : taps)
+    {
+        tap.lowpass.prepare(sampleRate);
+        tap.lowpass.setCutFreq(tap.cutOffFreq);
+    }
 }
 
 // ─── PROCESAMIENTO ───────────────────────────────────────────────────────────────
@@ -70,18 +87,21 @@ float MultiTapDelay::process(float input) //Se recibe del Daw el sample actual y
     float in = input; //Agarro la muestra que llega del ProcessBlock    
     float sum = 0.0f; //Empiezo con una suma vacía.
 
-    for (const auto& tap : taps) //Recorro vector de taps
+    for (auto& tap : taps) //Recorro vector de taps
     {
         if (!tap.enabled)
         continue; //Se fija si el tap actual está activado.
 
         //Para cada tap busco la muestra retrasada
         int delaySamples =  ((tap.delayMs / 1000.0f) * currentSampleRate); //Transformo el delay de ms a samples
-        int readIndex = (writeIndex - delaySamples + delayBuffSize) % delayBuffSize;   //Calculo donde leer
-            //Al sample actual le resto el delay en samples para leer el valor retrasado. Sumo delayBuffSize para evitar índices negativos, y uso módulo para que el buffer sea circular.       
+        //Calculo donde leer
+        int readIndex = (writeIndex - delaySamples + delayBuffSize) % delayBuffSize; //Al sample actual le resto el delay en samples para leer el valor retrasado. Sumo delayBuffSize para evitar índices negativos, y uso módulo para que el buffer sea circular.       
+        //Leo
         float delayedSample = delayBuffer[readIndex];
-        //Lo multiplico por su ganancia y lo agrego a la suma
-        sum += tap.gain * delayedSample; //Acumula el valor del sample retrasado ponderado por la ganancia
+        //Aplico el filtro a la salida
+        float delayedFilteredSample = tap.lowpass.processSample(delayedSample);
+        //Multiplico por su ganancia y lo agrego a la suma
+        sum += tap.gain * delayedFilteredSample; //Acumula el valor del sample retrasado ponderado por la ganancia
     }
     
     //Guardo la entrada en el buffer

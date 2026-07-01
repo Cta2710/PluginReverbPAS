@@ -18,7 +18,8 @@ public:
     enum class Parameter //Creo variables del tipo Parameter
     {
         Delay, //Guardamos los nombres
-        Gain
+        Gain,
+        CutOffFreq
     };
 
     GraphEditor(MultiTapDelay& d, Parameter parameter);
@@ -30,6 +31,8 @@ public:
     void mouseDrag (const juce::MouseEvent&) override;
 
     void mouseUp (const juce::MouseEvent&) override;
+
+    std::function<void()> onDataChanged;
 
 private:
     
